@@ -4,80 +4,37 @@ const express = require('express')
 const app = express()
 
 
+// error handling middleware
 
-// app.use("/",(req,res,next)=>{
-     
-//       res.send("WELCOME FROM HOME PAGE")
+app.use('/',(err,req,res,next)=>{
 
-//          next()
+    console.log("handling errors...!!")
 
-// })
+    if(err){
 
-
-
-// admin Authoriztion middleware
-
-app.use('/admin',(req,res,next)=>{
-
-    console.log("Authorizing the Admin")
-
-    const tocken = 1233
-
-    const authorization = true
-
-    if(tocken === 123 && authorization === true){
-
-       next()
-    }
-
-    else{
-        console.log("this is not an Admin")
-
-        res.status(401).send("Access Denied...!!")
+    res.status(500).send("Something went wrong...!!!")
     }
 })
 
 
-// Admin routes
+// handling an errocured user route
 
-app.get('/admin/data',(req,res)=>{
-    res.send("data sent to the Admin")
+app.get('/user',(req,res)=>{
+    // try{
+    //  writing logic of DB call and user data
+
+    throw new Error("vcvdbcvsgbckjh")
+
+    res.send("User data sent")
+   //}
+
+   // catch(err){
+
+   // res.status(500).send("something went wrong..please contact the support team..!!")
+   
+   //}
 })
 
-app.get('/admin/delete',(req,res)=>{
-    res.send("data deleted by admin")
-})
-
-
-
-// user Authentication middleware
-
-app.use('/user',(req,res,next)=>{
-
-    let token = 1288
-    let isUser = true
-
-    if(token === 123 && isUser === true){
-        console.log("User is Authenticating..!")
-        next()
-    }
-    else{
-        console.log(" Not a User")
-        res.status(401).send("This is not a User")
-    }
-})
-
-
-
-// User routes
-
-app.get('/user/login',(req,res)=>{
-    res.send("User Logged in successfully..")
-})
-
-app.get('/user/profile',(req,res)=>{
-    res.send("user Profile Checked")
-})
 
 
 
