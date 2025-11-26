@@ -1,42 +1,50 @@
 
+
 const express = require('express')
 
 const app = express()
 
+app.use((express.json()))
 
-// error handling middleware
+const connectDB = require("./config/database")   //  => requiring the 'database.js' from the 'confifg' folder
 
-app.use('/',(err,req,res,next)=>{
+const User = require("./models/user")
 
-    console.log("handling errors...!!")
 
-    if(err){
 
-    res.status(500).send("Something went wrong...!!!")
+app.post('/signup',async (req,res)=>{
+    const user = new User({
+        firstName : "fathimathul",
+        lastName : "faiza.TK",
+        emailId : "fathimthulfaiza@gmail.com",
+        password : "faiza123"
+    })
+
+    try{
+        await user.save()
+        res.send("user added successfully..")
+    }
+    catch(err){
+        res.status(400).send("error..!! user not saved..!")
+
     }
 })
 
 
-// handling an errocured user route
 
-app.get('/user',(req,res)=>{
-    // try{
-    //  writing logic of DB call and user data
+// connecting the database
 
-    throw new Error("vcvdbcvsgbckjh")
+connectDB()
+.then(()=>{
+    console.log("Database connected successfully...")
 
-    res.send("User data sent")
-   //}
+    app.listen(7777,()=> console.log("server running on port 7777")) // connected to the server only after successfully connected to the database
 
-   // catch(err){
+})
+.catch((err)=>{
+    console.log("Database connection went wrong.!!")
 
-   // res.status(500).send("something went wrong..please contact the support team..!!")
-   
-   //}
 })
 
 
 
-
-
-app.listen(7777,()=> console.log("server running on port 7777")) 
