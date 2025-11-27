@@ -30,6 +30,92 @@ app.post('/signup',async (req,res)=>{
 })
 
 
+// get users detaols  by emailId ({find})
+
+app.get('/users',async (req,res)=>{
+    const userEmail = req.body.emailId
+
+    try{
+        const users = await User.find({emailId : userEmail})  // trying to find the users with 'emailId' also can use ({findOne})
+
+        if(users.length === 0){
+            res.status(404).send("user not found")
+        }
+        else{
+            res.send(users)
+        }
+    }
+    catch(err){
+        res.status(400).send("Something went wrong")
+    }
+})
+
+
+
+// get the users detail by password ({find})
+
+app.get('/users',async(req,res)=>{
+
+    const userPassword = req.body.password 
+
+    try{
+        const users = await User.find({password : userPassword})
+
+        if(users.length === 0){
+            res.status(404).send("user not found..!")
+        }
+        else{
+        res.send(users)
+        }
+    }
+    catch(err){
+        res.status(400).send("something went wrong..!")
+    }
+})
+
+
+// get the user by _id ({find :_id})
+
+app.get('/users/:id',async (req,res)=>{
+
+    const userId = req.params.id     // getting id from URL
+
+    try{
+
+        const users = await User.findById(userId)
+        console.log(users)
+
+        if(!users){
+            res.status(404).send("user not found..!!")
+        }
+        else{
+
+             res.send(users)
+        }
+       
+    }
+    catch(err){
+        res.status(404).send("something went wrong..!")
+    }
+})
+
+
+
+// get the all users from the database
+
+app.get('/feed',async(req,res)=>{
+
+    try{
+        const users = await User.find({})
+        res.send(users)
+    }
+    catch(err){
+        res.status(404).send("Error...! users not avilable..!!")
+    }
+})
+
+
+
 // connecting the database
 
 connectDB()
