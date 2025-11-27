@@ -4,7 +4,7 @@ const express = require('express')
 
 const app = express()
 
-app.use((express.json()))
+app.use((express.json()))   // middleware to convert the 'json data' to 'js object' from req.body => works for all routes
 
 const connectDB = require("./config/database")   //  => requiring the 'database.js' from the 'confifg' folder
 
@@ -13,23 +13,21 @@ const User = require("./models/user")
 
 
 app.post('/signup',async (req,res)=>{
-    const user = new User({
-        firstName : "fathimathul",
-        lastName : "faiza.TK",
-        emailId : "fathimthulfaiza@gmail.com",
-        password : "faiza123"
-    })
 
+    console.log(req.body)
+    const user = new User (req.body)    // creating a new instance of user using req.body
+    
     try{
         await user.save()
-        res.send("user added successfully..")
+        res.send("user added successfully..")  // saving the user
     }
     catch(err){
         res.status(400).send("error..!! user not saved..!")
 
     }
-})
+  
 
+})
 
 
 // connecting the database
@@ -45,6 +43,4 @@ connectDB()
     console.log("Database connection went wrong.!!")
 
 })
-
-
 
