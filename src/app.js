@@ -9,6 +9,7 @@ app.use((express.json()))   // middleware to convert the 'json data' to 'js obje
 const connectDB = require("./config/database")   //  => requiring the 'database.js' from the 'confifg' folder
 
 const User = require("./models/user")
+const user = require('./models/user')
 
 
 
@@ -133,6 +134,37 @@ app.delete('/users/:id',async(req,res)=>{
     catch(err){
         res.status(400).send("something went wrong...!")
     }
+})
+
+
+
+// update the existig data of the user -> patch
+
+app.patch('/users/:id',async(req,res)=>{          //  =>   http://localhost:7777/users/69286351229afb2bc5e8ca56
+    const userId = req.params.id
+    const data = req.body
+
+  
+
+    try{
+          console.log(userId)
+    console.log(data)
+
+        const users = await User.findByIdAndUpdate(userId,data,{
+
+            returnDocument : "after",    // Give me the updated user data after updating
+
+            runValidators : true      // checking validator for patch updating   => ensures validation during updates
+
+        })
+        console.log(users)
+        res.send("user updated successfully..") 
+
+        }
+        catch(err){
+            res.status(400).send("Error...user not updated..!!")
+        }
+    
 })
 
 // connecting the database
