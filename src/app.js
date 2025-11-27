@@ -82,7 +82,7 @@ app.get('/users/:id',async (req,res)=>{
 
     try{
 
-        const users = await User.findById(userId)
+        const users = await User.findById({_id : userId})
         console.log(users)
 
         if(!users){
@@ -115,6 +115,25 @@ app.get('/feed',async(req,res)=>{
 })
 
 
+
+
+
+// delete one user through req.params.id  =>  http://localhost:7777/users/6927e880e1116b2b05349611
+
+app.delete('/users/:id',async(req,res)=>{
+    const userId = req.params.id     // 6927e880e1116b2b05349611
+
+    try{
+        const users = await User.findByIdAndDelete(userId)
+        console.log(userId)
+
+    res.send("User deleted Successfully..")
+
+    }
+    catch(err){
+        res.status(400).send("something went wrong...!")
+    }
+})
 
 // connecting the database
 
