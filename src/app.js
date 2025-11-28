@@ -10,9 +10,10 @@ const connectDB = require("./config/database")   //  => requiring the 'database.
 
 
 const User = require("./models/user")
-const user = require('./models/user')
+
 const { validateSignUpData } = require("./utils/validation")
 const bcrypt = require('bcrypt')     //   requiring the 'bcrypt' library function for password hashing
+
 
 
 
@@ -50,7 +51,7 @@ app.post('/signup',async (req,res)=>{
     })   
     
         // save the user to DB
-        
+
         await user.save()
         res.send("user added successfully..")  // saving the user
     }
@@ -62,8 +63,35 @@ app.post('/signup',async (req,res)=>{
 
 })
 
+// login API & validating the emailId and Password
 
-// get users detaols  by emailId ({find})
+app.post('/login',async(req,res)=>{
+
+    try{
+
+        const { emailId, password } = req.body
+
+        const user = await User.findOne({emailId : emailId})
+
+        if(!user){
+            throw new Error("Email id is not present in the DataBase")
+        }
+
+        const isPasswordValid = await bcrypt.compare(password,user.password) // comparing the normal passwprd with hashed password
+
+        if(isPasswordValid){
+            res.send("Login Successfull..")
+        }
+        else{
+            throw new Error("Password not coorect..!!!")
+        }
+    }
+    catch(err){
+        res.status(400).send("ERROR..!!" + err.message)
+    }
+})
+
+// get users details  by emailId ({find})
 
 app.get('/users',async (req,res)=>{
     const userEmail = req.body.emailId
