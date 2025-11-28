@@ -8,17 +8,49 @@ app.use((express.json()))   // middleware to convert the 'json data' to 'js obje
 
 const connectDB = require("./config/database")   //  => requiring the 'database.js' from the 'confifg' folder
 
+
 const User = require("./models/user")
 const user = require('./models/user')
+const { validateSignUpData } = require("./utils/validation")
+const bcrypt = require('bcrypt')     //   requiring the 'bcrypt' library function for password hashing
+
 
 
 
 app.post('/signup',async (req,res)=>{
 
     console.log(req.body)
-    const user = new User (req.body)    // creating a new instance of user using req.body
     
+
     try{
+
+        // validation of data
+
+        validateSignUpData(req)
+
+        // hashing password  🚀 We NEVER decode the hash. We only compare new hash with old hash.
+
+        const { firstName, lastName, emailId, password } = req.body    // only thse datas are allowes to store
+
+
+        // encrypting password
+
+        const passwordHash = await bcrypt.hash(password,10)    // 10 -> saltrounds
+        console.log(passwordHash)    // $2b$10$JnErssTMsvTkmrqfDyAZDOYyOVBhsJm9WRBkLsnmHd5ElkhqI1Zg2
+
+
+             // creating a new instance of User model  -> only these datas are allowed
+    const user = new User ({
+
+        firstName,
+        lastName,
+        emailId,
+        password : passwordHash    // password = passwordHash    -> hashed password
+
+    })   
+    
+        // save the user to DB
+        
         await user.save()
         res.send("user added successfully..")  // saving the user
     }
