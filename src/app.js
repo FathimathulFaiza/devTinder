@@ -150,6 +150,23 @@ app.patch('/users/:id',async(req,res)=>{          //  =>   http://localhost:7777
           console.log(userId)
     console.log(data)
 
+    const ALLOWED_UPDATES = ["photoUrl","about","gender","age","skills","lastName"]   // validation for user to allow only specefic items 
+
+    const isUpdateAllowed = Object.keys(data).every((key)=>{   // loop through object
+        return ALLOWED_UPDATES.includes(key)
+    })
+
+    if(!isUpdateAllowed) {
+        throw new Error("update not allowed..!")
+    }
+
+
+    if(data?.skills.length > 5){
+        throw new Error ("Skills cannot be added more than 5..!")   // validation for adding skills more than 5 is not allowed
+    }
+
+
+
         const users = await User.findByIdAndUpdate(userId,data,{
 
             returnDocument : "after",    // Give me the updated user data after updating
