@@ -23,10 +23,10 @@ app.post('/signup',async (req,res)=>{
         res.send("user added successfully..")  // saving the user
     }
     catch(err){
-        res.status(400).send("error..!! user not saved..!")
+        console.log("PATCH ERROR:", err);
+        res.status(400).send(err.message)
 
     }
-  
 
 })
 
@@ -161,7 +161,7 @@ app.patch('/users/:id',async(req,res)=>{          //  =>   http://localhost:7777
     }
 
 
-    if(data?.skills.length > 5){
+    if(data.skills && data?.skills.length > 5){
         throw new Error ("Skills cannot be added more than 5..!")   // validation for adding skills more than 5 is not allowed
     }
 
@@ -179,7 +179,8 @@ app.patch('/users/:id',async(req,res)=>{          //  =>   http://localhost:7777
 
         }
         catch(err){
-            res.status(400).send("Error...user not updated..!!")
+                console.log("PATCH ERROR:", err);
+            res.status(400).send(err.message)
         }
     
 })

@@ -1,5 +1,8 @@
 
 const mongoose = require("mongoose")
+const validator = require("validator")   // install -> npm i vlidator  (for checking hte validation in email,photo url..etc)
+
+
 
 const userSchema = new mongoose.Schema({       // these are all called 'schematype options'
     firstName : {
@@ -17,11 +20,23 @@ const userSchema = new mongoose.Schema({       // these are all called 'schematy
         required : true,  // mandatory field -> should be filled
         unique : true,    // must be unique
         lowercase : true,  // automatically converts the uppercase into lowercase
-        trim : true        // trim the extra spaces between from front and back
+        trim : true,        // trim the extra spaces between from front and back
+
+        validate(value){
+            if(!validator.isEmail(value)){         // validating the email address through 'validator' function (data-> email)
+                throw new Error("Invalid email address..!")
+            }
+        }
     },
     password : {
         type : String,
-        required : true
+        required : true,
+        
+        validate(value){       // validating the strong password  -> validator.isStrongPassword function  (value = password)
+            if(!validator.isStrongPassword(value)){
+                throw new Error ("Please enter a strong password..!")
+            }
+        }
     },
     age : {
         type : Number,
@@ -36,12 +51,19 @@ const userSchema = new mongoose.Schema({       // these are all called 'schematy
             }
         }
     },
-    age : {
-        type : Number
-    },
+    
+  
     photoUrl : {
         type : String,
-        default : "https://cdn-icons-png.flaticon.com/512/3135/3135715.png"   // by default it will give this img
+        default : "https://cdn-icons-png.flaticon.com/512/3135/3135715.png" ,  // by default it will give this img
+
+
+        validate(value){       // validating the address of photo Url using -> validator.isURL  function  , value = url of photo
+
+            if(!validator.isURL(value)){
+                throw new Error ("Inavalid photo URL address")
+            }
+        }
     },
     about : {
         type : String,
