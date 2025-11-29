@@ -1,20 +1,22 @@
 
 
 const express = require('express')
-
 const app = express()
+const bcrypt = require('bcrypt')     //   requiring the 'bcrypt' library function for password hashing
+const cookieParser = require('cookie-parser')
+const connectDB = require("./config/database")   //  => requiring the 'database.js' from the 'confifg' folder
+const jwt = require("jsonwebtoken")
+
 
 app.use((express.json()))   // middleware to convert the 'json data' to 'js object' from req.body => works for all routes
+app.use((cookieParser()))
 
-const connectDB = require("./config/database")   //  => requiring the 'database.js' from the 'confifg' folder
 
 
 const User = require("./models/user")
 
+
 const { validateSignUpData } = require("./utils/validation")
-const bcrypt = require('bcrypt')     //   requiring the 'bcrypt' library function for password hashing
-
-
 
 
 
@@ -79,16 +81,60 @@ app.post('/login',async(req,res)=>{
 
         const isPasswordValid = await bcrypt.compare(password,user.password) // comparing the normal passwprd with hashed password
 
-        if(isPasswordValid){
+        // creating JWT token
+
+        if(isPasswordValid){ 
+            
+            const token = await jwt.sign({_id : user._id},"DevTinder123")
+            console.log(token)
+
+            // add the token to the cookie ans send back the response to the user
+
+            res.cookie("token",token)
             res.send("Login Successfull..")
+
         }
         else{
-            throw new Error("Password not coorect..!!!")
+            throw new Error("Password not corect..!!!")
         }
     }
     catch(err){
         res.status(400).send("ERROR..!!" + err.message)
     }
+})
+
+
+// /profile api
+
+app.get('/profile',async(req,res)=>{
+
+try{
+    const cookies = req.cookies
+const { token } = cookies
+
+// validate the token
+if(!token){
+    throw new Error("Inavalid token")
+}
+
+const decodedMessage = await jwt.verify(token,"DevTinder123")
+console.log("decodedMessage : ",decodedMessage)
+
+const { _id } = decodedMessage
+
+console.log("Logged in user is : " + _id)
+
+const user = await User.findById(_id)
+    res.send(user)
+
+    if(!user){
+        throw new Error("User does not exist..!")
+    }
+
+}
+catch(err){
+    res.status(400).send("ERROR..!!" + err.message)
+}
 })
 
 // get users details  by emailId ({find})
