@@ -85,7 +85,7 @@ app.post('/login',async(req,res)=>{
 
         if(isPasswordValid){ 
             
-            const token = await jwt.sign({_id : user._id},"DevTinder123")
+            const token = await jwt.sign({_id : user._id},"DevTinder123", {expiresIn : "7d"})
             console.log(token)
 
             // add the token to the cookie ans send back the response to the user
@@ -119,6 +119,16 @@ catch(err){
 }
 })
 
+
+// sending connection request Api
+
+app.post('/sendConnectionRequest',userAuth,(req,res)=>{  // calling the userAuth middleware to authenticate the user
+    const user = req.user
+    // sending a connection request
+    console.log("sending a connection request")
+
+    res.send(user.firstName + " sent the connection Request!")
+})
 
 
 
