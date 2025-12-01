@@ -28,17 +28,12 @@ try{
 
     req.user = user   // attaching the user found in the database and call the next
 
-    next()    // if token is found and user is valid, then call the next()
+    next()    // if token is found and user is valid, then call the next() -> Only reached if token is present, valid, and a matching user exists.
 }
 catch(err){
     res.status(400).send("ERROR..! " + err.message)
 }
 }
-
-
-
-
-
 
 
 

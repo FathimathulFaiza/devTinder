@@ -1,6 +1,8 @@
 
 const mongoose = require("mongoose")
 const validator = require("validator")   // install -> npm i vlidator  (for checking hte validation in email,photo url..etc)
+const bcrypt = require('bcrypt')
+const jwt = require("jsonwebtoken")
 
 
 
@@ -79,6 +81,30 @@ const userSchema = new mongoose.Schema({       // these are all called 'schematy
     timestamps : true     // this methode is used for registering the => created and updated time 
 })
 
+
+// creating a helper methode to create the JWT token methode in userSchema
+
+userSchema.methods.getJWT = async function() {
+
+    const user = this;    // refers to the particular user
+   const token =  await jwt.sign({_id : user._id},"DevTinder123", {expiresIn : "7d"})
+   
+   return token
+            
+}
+
+
+// creating a function to validate the password of the user
+
+userSchema.methods.validatePassword = async function (passwordInputByUser) {
+    const user = this;
+    const passwordHash = user.password    // password created by bcrypt
+
+    const isPasswordValid = await bcrypt.compare(passwordInputByUser,passwordHash)  // comparing the password input by user and password hash
+
+    return isPasswordValid     
+
+}
 
   // User is a collection
 
