@@ -1,6 +1,7 @@
  
  const validator = require('validator')
 
+ // function to validate the sign up data
  const validateSignUpData = (req) => {
 
     const { firstName, lastName, emailId, password } = req.body
@@ -20,5 +21,19 @@ else if(!validator.isStrongPassword(password)){
 
  }
 
+// function to validate the edit profile data
 
- module.exports = { validateSignUpData }   
+validateEditProfileData = (req) => {
+
+    const allowedEditfields = ["firstName", "lastName", "emailId", "photoUrl", "gender", "age", "about", "skills"]
+
+// loop through the keys of req.body & check every field which is coming from the 'req.body' (field) is matching to 'allowedEditfield'
+
+   const isEditAllowed =  Object.keys(req.body).every(field => allowedEditfields.includes(field))
+
+   return isEditAllowed
+}
+
+
+
+ module.exports = { validateSignUpData, validateEditProfileData }   

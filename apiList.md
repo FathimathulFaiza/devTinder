@@ -11,7 +11,7 @@
 => profileRouter
  - GET /profile/view         -> See your own profile (only after login).
  - PATCH /profile/edit       -> Edit your profile details.
- - PATCH /profile/password   -> Change your password.
+ - PATCH /profile/password   -> forgot / Change your password. -> allows a logged-in user to change their current password by giving:    old & new password
 
 
 

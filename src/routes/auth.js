@@ -69,10 +69,10 @@ authRouter.post('/login',async(req,res)=>{
         const user = await User.findOne({emailId : emailId})
 
         if(!user){
-            throw new Error("Email id is not present in the DataBase")
+            throw new Error("Invalid Credentials!")
         }
 
-        const isPasswordValid = await user.validatePassword(password) // comparing the normal passwprd with hashed password
+        const isPasswordValid = await user.validatePassword(password) // comparing the normal password with hashed password
 
         // creating JWT token
 
@@ -80,20 +80,31 @@ authRouter.post('/login',async(req,res)=>{
             
             const token = await user.getJWT()
 
-            // add the token to the cookie ans send back the response to the user
+            // add the token to the cookie and send back the response to the user
 
-            res.cookie("token",token)
+            res.cookie("token",token, { expires : new Date(Date.now() + 8 * 3600000) }) // create cookie  & expires after 8 hours
             res.send("Login Successfull..")
 
         }
         else{
-            throw new Error("Password not corect..!!!")
+            throw new Error("Invalid Credentials!")
         }
     }
     catch(err){
         res.status(400).send("ERROR..!!" + err.message)
     }
 })
+
+
+//  logout API
+
+authRouter.post('/logout',async (req,res)=>{   // no need of user authentication -> only removing the cookies
+
+    res.cookie("token",null, { expires : new Date(Date.now())})  // set the cookie token to 'null' , remove the token from the cookie, expire the cookie 'now'
+
+    res.send("Logout Successfull..")
+})
+
 
 
 

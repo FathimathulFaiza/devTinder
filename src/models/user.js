@@ -25,7 +25,7 @@ const userSchema = new mongoose.Schema({       // these are all called 'schematy
         trim : true,        // trim the extra spaces between from front and back
 
         validate(value){
-            if(!validator.isEmail(value)){         // validating the email address through 'validator' function (data-> email)
+            if(!validator.isEmail(value)){         // validating the email address through 'validator' function (data -> email)
                 throw new Error("Invalid email address..!")
             }
         }
@@ -33,6 +33,7 @@ const userSchema = new mongoose.Schema({       // these are all called 'schematy
     password : {
         type : String,
         required : true,
+    
         
         validate(value){       // validating the strong password  -> validator.isStrongPassword function  (value = password)
             if(!validator.isStrongPassword(value)){

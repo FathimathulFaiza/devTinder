@@ -26,7 +26,7 @@ try{
         throw new Error("user not found..!")
     }
 
-    req.user = user   // attaching the user found in the database and call the next
+    req.user = user   // attaching the user found in the database and call the next -> logged in user
 
     next()    // if token is found and user is valid, then call the next() -> Only reached if token is present, valid, and a matching user exists.
 }
