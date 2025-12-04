@@ -48,6 +48,11 @@ const userSchema = new mongoose.Schema({       // these are all called 'schematy
     },
     gender : {
         type : String,
+        enum : {
+            values : ["male","female","others"],
+            message : `{VALUE} is not a valid gender type..!`    // error message
+        },
+
         validate(value){
             if (!["male","female","others"].includes(value)){
                 throw new Error("Gender is not valid..!!")
@@ -81,6 +86,11 @@ const userSchema = new mongoose.Schema({       // these are all called 'schematy
 },{
     timestamps : true     // this methode is used for registering the => created and updated time 
 })
+
+
+// creating a compound index to qiery on firstname and lastname faster (optional - for big app)
+//userSchema.index({firstName : 1, lastName : 1})
+
 
 
 // creating a helper methode to create the JWT token methode in userSchema
