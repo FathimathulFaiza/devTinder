@@ -15,7 +15,7 @@ userRouter.get('/user/requests/recieved', userAuth, async (req,res)=>{
         const connectionRequests = await connectionRequest.find({
             toUserId : loggedInUser._id,
             status : "interested"
-        }).populate("fromUserId", ["firstName", "lastName", "photoUrl", "age", "gender", "skills", "about"]) // -> asking to user collection to give the details of firstName & lastName along with
+        }).populate("fromUserId", ["firstName", "lastName", "photoUrl", "age", "gender", "skills", "about"]) // -> asking to user collection to give the details of firstName & lastName along with (JOINING 2 COLLECTIONS)
 
 
         res.json({

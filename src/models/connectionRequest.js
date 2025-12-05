@@ -6,7 +6,7 @@ const connectionRequestSchema = new mongoose.Schema({
 
     fromUserId : {
         type : mongoose.Schema.Types.ObjectId,     // type of the useerId is 'ObjectId'
-        ref : "User",      // creating a link or -> reference to the 'user' collection
+        ref : "User",      // creating a link or -> reference to the 'user' collection (JOINING 2 COLLECTIONS)
         required : true     // mandatory field
     },
     toUserId :{ 
