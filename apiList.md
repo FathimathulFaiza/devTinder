@@ -29,8 +29,8 @@
 
 
 => userRouter
- - GET /user/connections             -> Show all people you matched with (mutual interests).
  - GET /user/requests/recieved       -> Show all requests sent TO you that are still pending.
+ - GET /user/connections             -> Show all people you matched with (mutual interests).
  - GET /user/feed                    -> gets you the profile of other users on platform || Shows you new developer profiles 
         
 
