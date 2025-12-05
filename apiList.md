@@ -16,10 +16,15 @@
 
 
 => connectionRequestRouter
+# sender side -> make 1 api for both     ->  http://localhost:7777/request/send/:status/:userId      [ "interested" , "ignored" ]
  - POST /request/send/interested/:userId      -> When you “Like” a developer (similar to right swipe).
  - POST /request/send/ignored/:userId         -> When you “Ignore” someone (left swipe).
+
+# Reciever side ->  make i api for both    -> http://localhost:7777/request/review/:status/:requestId    [ "accepted" , "rejected" ]
  - POST /request/review/accepted/:requestId      -> You accept someone’s interested request.
  - POST /request/review/rejected/:requestId      -> You reject someone’s interest.
+
+
 
 
 

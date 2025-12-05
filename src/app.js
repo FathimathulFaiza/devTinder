@@ -15,12 +15,15 @@ app.use((cookieParser()))
 const authRouter = require('./routes/auth')
 const profileRouter = require('./routes/profile')
 const requestRouter = require('./routes/request')
+const userRouter = require('./routes/user')
+
 
 
 // use the router  ('/') -> means it will run for all the routes ,All requests starting with / will go through all these routers, and Express will try to match the route inside each router.
 app.use('/',authRouter)
 app.use('/',profileRouter)
 app.use('/',requestRouter)
+app.use('/',userRouter)
 
 
 
