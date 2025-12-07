@@ -35,6 +35,13 @@
         
 
 
+# => /feed api  ( Why? )
+ - User should see all the cards except : 
+ 1 - his own card
+ 2 - his connections
+ 3 - he ignored peoples
+ 4 - he already sent connection requests people
+
  
 
  status : ignore,interedted,accepted,rejected
