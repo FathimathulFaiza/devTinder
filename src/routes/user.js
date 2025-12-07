@@ -74,6 +74,20 @@ userRouter.get('/feed',userAuth, async (req,res)=>{
     try{
         const loggedInUser = req.user
 
+        const page = parseInt(req.query.page) || 1  // extract the page no from req.params and convert the string no. into integer => /feed?page=1&limit=10
+        
+        let limit = parseInt(req.query.limit) || 10 // extract the limit from req.params or set the limit to 10
+
+        // if the limit more than 50 , then set limit to 50 by default, else limit = that number (beloe 50)
+       if (limit > 50) {
+        limit = 50;
+     } else {
+     limit = limit;
+}
+
+        const skip = (page - 1) * limit      // formula to skip the user
+
+
         // find out all the connection either the user sent or he recieved (sent + recieved -> shouldnt show )
         const connectionRequests = await ConnectionRequest.find({
             $or :[{fromUserId : loggedInUser._id},     // sent  by loggedInInUser
@@ -95,13 +109,15 @@ userRouter.get('/feed',userAuth, async (req,res)=>{
 
 // find all users from 'User' collection who is not present in the  'hideUserFromFeed' Array. -> users show on feed -> except from 'hideUsersFromFeed' Array
 // hide his own profile -> loggedInUser
+
          const users = await User.find({
          $and : [
         {_id : { $nin : Array.from(hideUsersFromFeed) }},  // users _id 'not-in' hideUsersFeed array
         {_id : { $ne : loggedInUser._id}}     // users _id 'not-equal' to loggedInUser
          ]
-     }).select(USER_SAFE_DATA)  // shows only this data
+     }).select(USER_SAFE_DATA).skip(skip).limit(limit)     // shows only this data, skip the no.of user & put a limit for users showing
      
+
      res.send(users)   // show all the other users in db
 
 
