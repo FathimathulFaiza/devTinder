@@ -118,7 +118,7 @@ userRouter.get('/feed',userAuth, async (req,res)=>{
      }).select(USER_SAFE_DATA).skip(skip).limit(limit)     // shows only this data, skip the no.of user & put a limit for users showing
      
 
-     res.send(users)   // show all the other users in db
+     res.json({data : users})   // show all the other users in db
 
 
     }
