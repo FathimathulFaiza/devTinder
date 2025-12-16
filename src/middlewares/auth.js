@@ -13,7 +13,7 @@ try{
     const { token } = req.cookies
    
     if(!token){          // if token not found in req
-        throw new Error("Token is not valid..!!")
+        return res.status(401).send("Please Login..!")
     }
 
     const decodedObj = await jwt.verify(token,"DevTinder123")

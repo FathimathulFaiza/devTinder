@@ -5,7 +5,7 @@ const userRouter = express.Router()
 const ConnectionRequest = require('../models/connectionRequest')
 const User = require('../models/user')
 
-const USER_SAFE_DATA = "firstName lastName photoUrl age gender skills " // data shown for the user  
+const USER_SAFE_DATA = "firstName lastName photoUrl age gender skills about " // data shown for the user  
 
 // api for getting all the pending request for the logged in user
 

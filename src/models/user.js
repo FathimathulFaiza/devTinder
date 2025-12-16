@@ -119,4 +119,4 @@ userSchema.methods.validatePassword = async function (passwordInputByUser) {
 
   // User is a collection
 
-module.exports = mongoose.model("User",userSchema)   // exporting the user collectiona
+module.exports = mongoose.model("User",userSchema)   // exporting the user collections

@@ -3,8 +3,15 @@
 const express = require('express')
 const app = express()
 
+const cors = require("cors")   // requiring the cors middleware for api fetch
 const cookieParser = require('cookie-parser')
 const connectDB = require("./config/database")   //  => requiring the 'database.js' from the 'confifg' folder
+
+app.use(cors({
+
+    origin : "http://localhost:5173",  // fronted url
+    credentials : true                 // allow cookies
+}))
 
 
 app.use((express.json()))   // middleware to convert the 'json data' to 'js object' from req.body => works for all routes

@@ -45,8 +45,15 @@ authRouter.post('/signup',async (req,res)=>{
     
         // save the user to DB
 
-        await user.save()
-        res.send("user added successfully..")  // saving the user
+       const savedUser =  await user.save()
+
+          const token = await savedUser.getJWT()
+
+            // add the token to the cookie and send back the response to the user
+
+            res.cookie("token",token, { expires : new Date(Date.now() + 8 * 3600000) })
+
+        res.json({message : "user added successfully..",data : savedUser })  // saving the user
     }
     catch(err){
         console.log("PATCH ERROR:", err);
@@ -83,7 +90,7 @@ authRouter.post('/login',async(req,res)=>{
             // add the token to the cookie and send back the response to the user
 
             res.cookie("token",token, { expires : new Date(Date.now() + 8 * 3600000) }) // create cookie  & expires after 8 hours
-            res.send("Login Successfull..")
+            res.send(user)
 
         }
         else{
