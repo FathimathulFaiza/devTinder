@@ -5,6 +5,9 @@ const ConnectionRequest = require('../models/connectionRequest')
 const requestRouter = express.Router()   // creating an express router
 const { userAuth } = require('../middlewares/auth') // middleware for checking the validation of emailid and password
 const User = require('../models/user')
+const sendEmail = require("../utils/sendEmail")
+const user = require('../models/user')
+
 
 
 // Receiver-side request review”
@@ -13,19 +16,16 @@ const User = require('../models/user')
 // :status -> dynamic       => http://localhost:7777/request/send/interested/692e885fed223224b4aa7028
 
 requestRouter.post('/request/send/:status/:toUserId',userAuth, async (req,res)=>{  // calling the userAuth middleware to authenticate the user
+    console.log("1. API HIT successfully"); // Add this
     try{
 
-        const fromUserId = req.user._id        // -> user who is logged in sending the request
+        //const fromUserId = req.user._id        // -> user who is logged in sending the request
+        const fromUserId = req.user._id
         const toUserId = req.params.toUserId   // -> userId in the req.params -> user who recieves the request
         const status = req.params.status     // -> status : " interested " or " ignored "
 
 
-// This creates a new document using your ConnectionRequest model.
-        const connectionRequest = new ConnectionRequest({
-            fromUserId,
-            toUserId,
-            status
-        })
+
 
 // validation for 'status' coming from url
 
@@ -41,10 +41,9 @@ requestRouter.post('/request/send/:status/:toUserId',userAuth, async (req,res)=>
         const toUser = await User.findById(toUserId)
 
         if(!toUser){
-            res.status(404).json( {message : "User Not Found..!"} )
+             return res.status(404).json( {message : "User Not Found..!"} )
     
         }
- 
 
 
  // finding wheather the connection request already exists or the 'toUserId' has sent the connection request -> to 'fromUserId' already
@@ -59,19 +58,36 @@ requestRouter.post('/request/send/:status/:toUserId',userAuth, async (req,res)=>
         })
      
 
-        if(existingConnectionRequest){      // if already finds a connection requests -> ERROR..!
-            return res.status(400).send("Connection Requests Already Exists..!")
-        }
+        // if(existingConnectionRequest){      // if already finds a connection requests -> ERROR..!
+        //     console.log("2. Connection already exists - stopping here"); // Add this
 
+        //     return res.status(400).send("Connection Requests Already Exists..!")
+        // }
+
+
+// This creates a new document using your ConnectionRequest model.
+    const connectionRequest = new ConnectionRequest({
+            fromUserId,
+            toUserId,
+            status
+        })
+      
 
 // save to database
+console.log("3. About to save to DB and run email"); // Add this
         const data = await connectionRequest.save()
 
-         return res.json({
-            message : `${req.user.firstName} is ${status} in ${toUser.firstName}` })
+       const emailRes = await sendEmail.run("A new friend request from  " + req.user.firstName,
+         req.user.firstName + " is " + status + " in " + toUser.firstName);
 
-    }
-    catch(err){
+        console.log(emailRes)
+
+ return res.json({
+  message : `Connection request sent successfully to ${toUser.firstName}! Check your email.` 
+})
+}
+catch(err){
+        console.error("DEBUGGING EMAIL ERROR:", err);
         res.status(400).send("ERROR..!" + err.message)
     }
 

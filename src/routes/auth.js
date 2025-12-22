@@ -72,6 +72,10 @@ authRouter.post('/login',async(req,res)=>{
     try{
 
         const { emailId, password } = req.body
+        
+           if (!req.body || Object.keys(req.body).length === 0) {
+      throw new Error("Request body is empty");
+    }
 
         const user = await User.findOne({emailId : emailId})
 
@@ -89,8 +93,16 @@ authRouter.post('/login',async(req,res)=>{
 
             // add the token to the cookie and send back the response to the user
 
-            res.cookie("token",token, { expires : new Date(Date.now() + 8 * 3600000) }) // create cookie  & expires after 8 hours
-            res.send(user)
+            res.cookie("token",token, { expires : new Date(Date.now() + 8 * 3600000),
+            httpOnly: true, 
+            secure : false,
+            sameSite : "lax"
+        })                          // create cookie  & expires after 8 hours
+
+   res.json({
+        message: "Login Successful!",
+        data: user
+    })
 
         }
         else{
