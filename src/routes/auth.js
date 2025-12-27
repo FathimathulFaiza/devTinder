@@ -1,5 +1,6 @@
 
 // creating a  router
+console.log("✅ authRouter loaded");
 
 const express = require('express')
 const authRouter = express.Router() 
@@ -51,7 +52,13 @@ authRouter.post('/signup',async (req,res)=>{
 
             // add the token to the cookie and send back the response to the user
 
-            res.cookie("token",token, { expires : new Date(Date.now() + 8 * 3600000) })
+          res.cookie("token", token, {
+  httpOnly: true,
+  secure: false,       // true only in HTTPS
+  sameSite: "lax",
+  path: "/",
+  expires: new Date(Date.now() + 8 * 3600000)
+})
 
         res.json({message : "user added successfully..",data : savedUser })  // saving the user
     }
@@ -96,7 +103,8 @@ authRouter.post('/login',async(req,res)=>{
             res.cookie("token",token, { expires : new Date(Date.now() + 8 * 3600000),
             httpOnly: true, 
             secure : false,
-            sameSite : "lax"
+            sameSite : "lax",
+           
         })                          // create cookie  & expires after 8 hours
 
    res.json({
@@ -126,7 +134,9 @@ authRouter.post('/logout',async (req,res)=>{   // no need of user authentication
 
 
 
-
+authRouter.get("/test", (req, res) => {
+  res.send("AUTH ROUTER WORKING");
+});
 
 
 module.exports = authRouter;  // exporting the aythRouter file

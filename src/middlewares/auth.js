@@ -7,6 +7,7 @@ const User = require('../models/user')
 // Middleware to Authenticate the User , is the user logged in ? password and emailId are correct ?  
 
 const userAuth = async (req,res,next) =>{
+     console.log("🍪 Cookies received from browser:", req.cookies)
 
     // read the token from cookies
 try{

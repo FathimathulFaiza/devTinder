@@ -60,3 +60,16 @@
 -  formula to get the no.of users skip 
 
 skip = (page - 1) * limit        //    ex : page = 2     //  skip = (2 - 1) * 10  => users from 10 - 20
+
+
+
+# URLS
+
+http://localhost:5173  → frontend
+http://localhost:7777  → backend
+
+
+https://devpartner.work → frontend (NGINX)
+https://devpartner.work/api → backend (NGINX → Node)
+
+

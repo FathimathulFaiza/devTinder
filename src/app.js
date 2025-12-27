@@ -1,21 +1,15 @@
+
+
 require("dotenv").config();
 
 const express = require('express')
-const app = express()
-
 const cors = require("cors")   // requiring the cors middleware for api fetch
 const cookieParser = require('cookie-parser')
 const connectDB = require("./config/database")   //  => requiring the 'database.js' from the 'confifg' folder
 
-app.use(cors({
-  origin: [
-    "http://localhost:5173",
-    "https://devpartner.work"
-  ],
-  credentials: true,
- 
-}));
+require("./utils/cronJob.js")   // requiring cron-job file from folder
 
+const app = express()
 
 
 
@@ -23,12 +17,26 @@ app.use(express.json())   // middleware to convert the 'json data' to 'js object
 app.use(cookieParser())
 
 
+app.use(cors({
+  origin: "http://localhost:5173",
+  credentials: true,
+}));
+
+
+
+console.log("🔥 App started, loading routers...");
 
 // import the routes
-const authRouter = require('./routes/auth')
+console.log("📦 loading authRouter...");
+
+const authRouter = require('./routes/auth.js')
 const profileRouter = require('./routes/profile')
 const requestRouter = require('./routes/request')
 const userRouter = require('./routes/user')
+const paymentRouter = require('./routes/payment.js')
+
+
+
 
 
 
@@ -37,25 +45,23 @@ app.use('/',authRouter)
 app.use('/',profileRouter)
 app.use('/',requestRouter)
 app.use('/',userRouter)
+app.use('/',paymentRouter)
+
 
 
 const PORT = process.env.PORT || 7777;
-app.listen(PORT, "0.0.0.0", () => {
-  console.log(`🚀 Server running on port ${PORT}`);
-});
+
 
 // connecting the database
-
 connectDB()
 .then(()=>{
-    console.log("Database connected successfully...")
-
-    app.listen(process.env.PORT,()=> console.log("server running on port 7777")) // connected to the server only after successfully connected to the database
-
+    console.log("Database connected successfully...");
+    // Only start the server AFTER the database is connected
+    app.listen(PORT, "0.0.0.0", () => {
+      console.log(`🚀 Server running on port ${PORT}`);
+    });
 })
 .catch((err)=>{
-    console.log("Database connection went wrong.!!")
-    console.error(err)
-
-})
-
+    console.log("Database connection went wrong.!!");
+    console.error(err);
+});

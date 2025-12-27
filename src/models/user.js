@@ -60,6 +60,15 @@ const userSchema = new mongoose.Schema({       // these are all called 'schematy
         }
     },
     
+    isPremium : {
+        type : Boolean,
+        default : false
+    },
+
+    membershiptype : {
+        type : String
+    },
+    
   
     photoUrl : {
         type : String,
