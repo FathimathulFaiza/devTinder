@@ -18,8 +18,11 @@ app.use(cookieParser())
 
 
 app.use(cors({
-  origin: "http://localhost:5173",
-  credentials: true,
+  origin:["http://localhost:5173",
+    "http://devpartner.work",
+    "https://devpartner.work",
+  ],
+  credentials: true
 }));
 
 
@@ -33,7 +36,7 @@ const authRouter = require('./routes/auth.js')
 const profileRouter = require('./routes/profile')
 const requestRouter = require('./routes/request')
 const userRouter = require('./routes/user')
-const paymentRouter = require('./routes/payment.js')
+const paymentRouter = require('./routes/payment')
 
 
 

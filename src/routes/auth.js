@@ -55,8 +55,7 @@ authRouter.post('/signup',async (req,res)=>{
           res.cookie("token", token, {
   httpOnly: true,
   secure: false,       // true only in HTTPS
-  sameSite: "lax",
-  path: "/",
+
   expires: new Date(Date.now() + 8 * 3600000)
 })
 

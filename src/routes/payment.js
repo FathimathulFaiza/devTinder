@@ -1,3 +1,5 @@
+console.log("✅ paymentRouter loaded");
+
 
 const express = require('express')
 const paymentRouter = express.Router()
@@ -6,9 +8,14 @@ const razorpayInstance = require('../utils/razorpay')
 const Payment = require('../models/payment')
 const { membershipAmount } = require('../utils/constants')
 const {validateWebhookSignature} = require('razorpay/dist/utils/razorpay-utils')
-const payment = require('../models/payment')
+
 const User = require('../models/user') 
 
+
+// testing
+paymentRouter.get('/payment/test', (req, res) => {
+  res.send("PAYMENT ROUTER WORKING");
+});
 
 paymentRouter.post('/payment/create', userAuth, async (req, res) => {
   try {
@@ -67,7 +74,7 @@ paymentRouter.post('/payment/create', userAuth, async (req, res) => {
 
 paymentRouter.post('/payment/webhook', async(req,res)=>{
     try{
-        const webhookSignature = req.get["X-Razorpay-Signature"]   // this how we get our webhook signature header
+        const webhookSignature = req.get("X-Razorpay-Signature")   // this how we get our webhook signature header
 
        const isWebhookValid =  validateWebhookSignature(
         JSON.stringify(req.body),
@@ -75,8 +82,8 @@ paymentRouter.post('/payment/webhook', async(req,res)=>{
           process.env.RAZORPAY_WEBHOOK_SECRET) // validate the webhook signature -> return 'true or false'
 
           // if isWebhookSignature is not valid -> false
-          if(!webhookSignature){
-            return res.status(400).json({msg : "webhook signature is not valid..!!"})
+          if(!isWebhookValid){
+            return res.status(400).json({msg : "webhook signature is  valid..!!"})
           }
 
           // update the payment status in DB (captured or failed )
