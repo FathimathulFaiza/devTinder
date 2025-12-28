@@ -83,29 +83,25 @@ paymentRouter.post('/payment/webhook', async(req,res)=>{
 
           // if isWebhookSignature is not valid -> false
           if(!isWebhookValid){
-            return res.status(400).json({msg : "webhook signature is  valid..!!"})
+            return res.status(400).json({msg : "webhook signature is  invalid..!!"})
           }
 
           // update the payment status in DB (captured or failed )
 
-          const paymentdetils = req.body.payload.payment.entity
+          const paymentDetils = req.body.payload.payment.entity
 
-          const payment = await Payment.findOne({orderId : paymentdetils.orderId })
+          const payment = await Payment.findOne({orderId : paymentDetils.orderId })
 
-          payment.status = paymentdetils.status
+          payment.status = paymentDetils.status
 
           await payment.save()
 
 
           const user = await User.findOne({_id : payment.userId})  // get the user
           user.isPremium = true
-          user.membershiptype = payment.notes.membershipType
+          user.membershipType = payment.notes.membershipType
 
           await user.save()   // save the user
-
-
-
-          
 
 
 
@@ -117,6 +113,8 @@ paymentRouter.post('/payment/webhook', async(req,res)=>{
     //    if(req.body.event === "payment.failed") {       // failed 
 
     //    }
+
+    return res.status(200).json({msg : "Webhook recieved Successfully.."})
     }
     catch(err){
         return res.status(500).json({msg : err.message})

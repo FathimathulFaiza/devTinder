@@ -65,7 +65,7 @@ const userSchema = new mongoose.Schema({       // these are all called 'schematy
         default : false
     },
 
-    membershiptype : {
+    membershipType : {
         type : String
     },
     
