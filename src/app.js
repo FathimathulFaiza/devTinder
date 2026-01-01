@@ -37,6 +37,11 @@ const profileRouter = require('./routes/profile')
 const requestRouter = require('./routes/request')
 const userRouter = require('./routes/user')
 const paymentRouter = require('./routes/payment')
+const http = require('http');
+const initializeSocket = require("./utils/socket.js");
+const chatRouter = require("./routes/chat.js");
+
+
 
 
 
@@ -49,10 +54,15 @@ app.use('/',profileRouter)
 app.use('/',requestRouter)
 app.use('/',userRouter)
 app.use('/',paymentRouter)
+app.use('/',chatRouter)
 
 
 
 const PORT = process.env.PORT || 7777;
+
+const server = http.createServer(app)    // socket.io
+initializeSocket(server)
+
 
 
 // connecting the database
@@ -60,7 +70,7 @@ connectDB()
 .then(()=>{
     console.log("Database connected successfully...");
     // Only start the server AFTER the database is connected
-    app.listen(PORT, "0.0.0.0", () => {
+    server.listen(PORT, "0.0.0.0", () => {
       console.log(`🚀 Server running on port ${PORT}`);
     });
 })

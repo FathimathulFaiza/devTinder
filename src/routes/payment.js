@@ -86,7 +86,7 @@ paymentRouter.post('/payment/webhook', async(req,res)=>{
             return res.status(400).json({msg : "webhook signature is  invalid..!!"})
           }
 
-          // update the payment status in DB (captured or failed )
+          // if the webhookmis valid , update the payment status in DB (captured or failed )
 
           const paymentDetils = req.body.payload.payment.entity
 
@@ -114,11 +114,24 @@ paymentRouter.post('/payment/webhook', async(req,res)=>{
 
     //    }
 
+
+    // return success response to razorpay
     return res.status(200).json({msg : "Webhook recieved Successfully.."})
     }
     catch(err){
         return res.status(500).json({msg : err.message})
 
+    }
+})
+
+
+paymentRouter.get("/premium/verify",userAuth, async(req,res)=>{
+    const user = req.user
+    if(user.isPremium){
+        return res.json({isPremium : true})
+    }
+    else{
+        return res.json ({isPremium : false})
     }
 })
 
